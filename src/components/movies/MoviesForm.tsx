@@ -1,9 +1,9 @@
 import React from 'react';
 import {TField} from '../common/Fields/helpers';
-import ModalForm, {TFormMode} from '../form/ModalForm';
+import ModalForm from '../form/ModalForm';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {GET_DIRECTORS, GET_MOVIE} from './queries';
-import {useHistory, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import {IMovie} from '../../types/models';
 import {ADD_MOVIE, UPDATE_MOVIE} from './mutations';
 
@@ -26,7 +26,6 @@ type TDirectorsResponse = {
 
 const MoviesForm = () => {
     const {id} = useParams<TParams>();
-    const history = useHistory()
     const movieQuery = useQuery<TMoviesResponse>(GET_MOVIE, {
         variables: {id}
     });
@@ -60,7 +59,7 @@ const MoviesForm = () => {
     const initialValues = {
         name: '',
         genre: '',
-        rate: 0,
+        rate: null,
         watched: false,
         directorId: '' as string | number
     };
@@ -77,17 +76,6 @@ const MoviesForm = () => {
         {name: 'watched', label: 'Did you watch this movie?', type: 'checkbox'}
     ];
 
-    const handleSubmit = (values: TValues, setSubmitting: (submitting: boolean) => void, mode: TFormMode) => {
-        const method = mode === 'Add' ? addMovie : editMovie;
-
-        method({
-            variables: values
-        })
-            .then(() => {
-                setSubmitting(false);
-                history.push('/movies');
-            });
-    };
 
     return (
         <ModalForm
@@ -96,7 +84,8 @@ const MoviesForm = () => {
             fields={fields}
             initialValues={initialValues}
             data={movieQuery.data?.movie}
-            handleSubmit={handleSubmit}
+            addMethod={addMovie}
+            editMethod={editMovie}
         />
     )
 };

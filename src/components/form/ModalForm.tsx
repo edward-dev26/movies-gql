@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import style from './ModalForm.module.css';
 import {Button, Modal} from 'antd';
-import {NavLink} from 'react-router-dom';
+import {NavLink, useHistory} from 'react-router-dom';
 import {CloseOutlined} from '@ant-design/icons/lib';
 import EntityForm from './EntityForm';
 import {IDirector, IMovie} from '../../types/models';
 import {TField} from '../common/Fields/helpers';
 import {Formik, FormikHelpers} from 'formik';
+import {MutationFunctionOptions} from '@apollo/client/react/types/types';
+import {FetchResult} from '@apollo/client/link/core';
 
 type TInitialValues = { [key: string]: any };
 export type TFormMode = 'Edit' | 'Add';
@@ -17,13 +19,15 @@ type PropsType = {
     data?: IMovie | IDirector
     fields: Array<TField<any>>
     initialValues: TInitialValues
-    handleSubmit: (values: any, setSubmitting: (submitting: boolean) => void, formMode: TFormMode) => void
+    editMethod: (options: MutationFunctionOptions) => Promise<FetchResult>
+    addMethod: (options: MutationFunctionOptions) => Promise<FetchResult>
 };
 
-const ModalForm: React.FC<PropsType> = ({entity, id, data, fields, initialValues, handleSubmit}) => {
+const ModalForm: React.FC<PropsType> = ({entity, id, data, fields, initialValues, addMethod, editMethod}) => {
     const [values, setValues] = useState(initialValues);
     const ENTITY_URL = `/${entity}s`;
     const formMode = id ? 'Edit' : 'Add';
+    const history = useHistory()
 
     const getVariables = (values: TInitialValues, mode: TFormMode) => {
         if (mode === 'Edit') return {...values, id};
@@ -32,7 +36,15 @@ const ModalForm: React.FC<PropsType> = ({entity, id, data, fields, initialValues
     }
 
     const onSubmit = (values: TInitialValues, {setSubmitting}: FormikHelpers<TInitialValues>) => {
-        handleSubmit(getVariables(values, formMode), setSubmitting, formMode);
+        const method = formMode === 'Add' ? addMethod : editMethod;
+
+        method({
+            variables: getVariables(values, formMode)
+        })
+            .then(() => {
+                setSubmitting(false);
+                history.push(`/${entity}s`);
+            });
     };
 
     useEffect(() => {

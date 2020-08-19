@@ -13,3 +13,17 @@ export const GET_DIRECTORS = gql`
         }
     }
 `;
+
+export const GET_DIRECTOR = gql`
+    query GetDirector($id: ID) {
+        director(id: $id) {
+            id
+            name
+            age
+            movies {
+                name
+                id
+            }
+        }
+    }
+`;

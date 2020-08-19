@@ -2,8 +2,11 @@ import React from 'react';
 import {useQuery} from '@apollo/client';
 import Preloader from '../common/Preloader/Preloader';
 import {Table} from 'antd';
-import {IDirector} from '../../types/models';
+import {IDirector, IMovie} from '../../types/models';
 import {GET_DIRECTORS} from './queries';
+import DropdownMenu, {TMenuItems} from '../common/DropdownMenu/DropdownMenu';
+import {ColumnsType} from 'antd/lib/table/interface';
+import FixedButton from '../common/FixedButton/FixedButton';
 
 type TMovie = {
     id: string | number
@@ -14,10 +17,17 @@ type TResponse = {
     directors: Array<IDirector<TMovie>>
 }
 
+type TRecord = Omit<IDirector<TMovie>, 'id'> & { key: string | number };
+
+const getActions = (id: string | number): Array<TMenuItems> => ([
+    {title: 'Edit', path: `/directors/edit/${id}`},
+    {title: 'Delete', action: () => void 0}
+]);
+
 const Directors = () => {
     const {data, loading} = useQuery<TResponse>(GET_DIRECTORS);
 
-    const columns = [
+    const columns: ColumnsType<TRecord> = [
         {
             title: 'Name',
             dataIndex: 'name',
@@ -28,20 +38,26 @@ const Directors = () => {
         },
         {
             title: 'Movies',
-            dataIndex: 'movies'
+            dataIndex: 'movies',
+            render: movies => movies.map((movie: IMovie) => movie.name).join(',')
+        },
+        {
+            title: 'Actions',
+            dataIndex: 'actions',
+            render: ((_, record) => <DropdownMenu menuItems={getActions(record.key)}/>)
         }
     ];
 
-    const directors = data?.directors.map(({id, movies, ...movie}) => ({
+    const directors = data?.directors.map(({id, ...movie}) => ({
         ...movie,
-        key: id,
-        movies: movies.map(movie => movie.name).join(', ')
+        key: id
     }));
 
     if (loading) return <Preloader/>
 
     return (
         <div>
+            <FixedButton path='/directors/add'/>
             <Table
                 columns={columns}
                 dataSource={directors}

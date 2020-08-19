@@ -4,7 +4,7 @@ import style from '../Header.module.css';
 
 const Nav = () => {
     const links = [
-        {path: '/', title: 'Movies', exact: true},
+        {path: '/movies', title: 'Movies'},
         {path: '/directors', title: 'Directors'}
     ];
 
@@ -14,7 +14,7 @@ const Nav = () => {
                 {
                     links.map(link => (
                         <li key={link.path}>
-                            <NavLink to={link.path} activeClassName={style.active} exact={link.exact}>
+                            <NavLink to={link.path} activeClassName={style.active}>
                                 {link.title}
                             </NavLink>
                         </li>
