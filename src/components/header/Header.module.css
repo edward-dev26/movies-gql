@@ -1,0 +1,33 @@
+.header {
+    background-color: #282c34;
+    color: #fff;
+    padding: 0 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header h1 {
+    color: #fff;
+    margin: 0;
+    font-weight: 700;
+}
+
+.nav ul {
+    display: flex;
+    margin: 0;
+}
+
+.nav a {
+    color: #fff;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-weight: 600;
+}
+
+.nav a:hover,
+.nav .active {
+    background-color: #455876;
+}

@@ -1,0 +1,25 @@
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    width: 40px;
+    height: 40px;
+    background-color: #1890ff;
+    color: white !important;
+    border-radius: 50%;
+    font-size: 22px;
+    transition: background-color .2s;
+}
+
+.button:hover {
+    background-color: rgba(24, 144, 255, 0.8);
+    transition: background-color .3s;
+}
+
+.button:active {
+    background-color: #1890ff;
+    transition: background-color .1s;
+}

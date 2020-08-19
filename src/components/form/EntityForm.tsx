@@ -1,42 +1,20 @@
 import React from 'react';
+import {Form} from 'formik';
+import {Form as AntdForm} from 'antd';
+import {createField, TField} from '../common/Fields/helpers';
 
-const Form = () => {
+type PropsType = {
+    fields: Array<TField<any>>
+}
+
+const EntityForm: React.FC<PropsType> = ({fields}) => {
     return (
-        <div>
-            <Formik
-                initialValues={{email: '', password: ''}}
-                validate={values => {
-                    const errors = {};
-                    if (!values.email) {
-                        errors.email = 'Required';
-                    } else if (
-                        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                    ) {
-                        errors.email = 'Invalid email address';
-                    }
-                    return errors;
-                }}
-                onSubmit={(values, {setSubmitting}) => {
-                    setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
-                        setSubmitting(false);
-                    }, 400);
-                }}
-            >
-                {({isSubmitting}) => (
-                    <Form>
-                        <Field type="email" name="email"/>
-                        <ErrorMessage name="email" component="div"/>
-                        <Field type="password" name="password"/>
-                        <ErrorMessage name="password" component="div"/>
-                        <button type="submit" disabled={isSubmitting}>
-                            Submit
-                        </button>
-                    </Form>
-                )}
-            </Formik>
-        </div>
+        <AntdForm>
+            <Form>
+                {fields.map(createField)}
+            </Form>
+        </AntdForm>
     )
 };
 
-export default Form;
+export default EntityForm;

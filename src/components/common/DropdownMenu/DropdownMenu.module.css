@@ -1,0 +1,11 @@
+.dropdown {
+    cursor: pointer;
+}
+
+.dropdown__icon {
+    font-size: 22px;
+}
+
+.dropdown__menu {
+    min-width: 100px;
+}
