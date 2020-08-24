@@ -51,6 +51,7 @@ function formikField(Component: React.ComponentType<any>): React.FC<InputPropsTy
                             label={label}
                             validateStatus={isError(meta)}
                             help={meta.touched && meta.error}
+                            labelCol={input.type !== 'checkbox' ? {span: 4} : void 0}
                         >
                             <Component {...field} {...getProps(field.value)}/>
                         </AntdForm.Item>
