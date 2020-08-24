@@ -12,14 +12,14 @@ export type TField<V = string, P = InputPropsType> = Omit<InputPropsType, 'name'
 export function createField<V>({type, options, ...props}: TField<V>) {
     switch (type) {
         case 'text':
-            return <FormikInput {...props}/>
+            return <FormikInput {...props} key={props.name as string}/>
         case 'checkbox':
-            return <FormikCheckbox {...props} type={type}/>
+            return <FormikCheckbox {...props} type={type} key={props.name as string}/>
         case 'number':
-            return <FormikInput {...props} type='number'/>
+            return <FormikInput {...props} type='number' key={props.name as string}/>
         case 'select':
-            return <FormikSelect {...props} options={options}/>
+            return <FormikSelect {...props} options={options} key={props.name as string}/>
         default:
-            return <FormikInput {...props}/>
+            return <FormikInput {...props} key={props.name as string}/>
     }
 }

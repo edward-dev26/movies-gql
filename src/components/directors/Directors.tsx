@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useMutation, useQuery} from '@apollo/client';
 import Preloader from '../common/Preloader/Preloader';
 import {Table} from 'antd';
@@ -26,8 +26,12 @@ type TDeleteVariables = {
 };
 
 const Directors = () => {
-    const {data, loading} = useQuery<TResponse>(GET_DIRECTORS);
+    const {data, loading, refetch} = useQuery<TResponse>(GET_DIRECTORS);
     const [deleteDirector] = useMutation<TDeleteVariables, TDeleteVariables>(DELETE_DIRECTOR);
+
+    useEffect(() => {
+        refetch();
+    }, []);
 
     const columns: ColumnsType<TRecord> = [
         {

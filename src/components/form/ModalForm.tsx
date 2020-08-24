@@ -40,7 +40,6 @@ const ModalForm: React.FC<PropsType> = ({entity, id, data, fields, initialValues
 
         method({
             variables: getVariables(values, formMode),
-
         })
             .then(() => {
                 setSubmitting(false);
@@ -59,7 +58,7 @@ const ModalForm: React.FC<PropsType> = ({entity, id, data, fields, initialValues
                     const dataKey = key.replace(/Id/, '');
 
                     value = data[dataKey as keyof typeof data] as any;
-                    value = value.id;
+                    value = value ? value.id : value;
                 }
 
                 newValues[key as keyof TInitialValues] = value;

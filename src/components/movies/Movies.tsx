@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Table} from 'antd';
 import {useMutation, useQuery} from '@apollo/client';
 import {GET_MOVIES} from './queries';
@@ -29,9 +29,13 @@ type TUpdateVariables = Omit<IMovie<TDirector>, 'director'> & { directorId: numb
 type TRecord = Omit<IMovie<TDirector>, 'id'> & { key: string | number };
 
 const Movies = () => {
-    const {data, loading} = useQuery<TResponse>(GET_MOVIES);
+    const {data, loading, refetch} = useQuery<TResponse>(GET_MOVIES);
     const [updateMovie] = useMutation<TResponse, TUpdateVariables>(UPDATE_MOVIE);
     const [deleteMovie] = useMutation<TDeleteVariables, TDeleteVariables>(DELETE_MOVIE);
+
+    useEffect(() => {
+        refetch();
+    }, [])
 
     const handleDelete = (id: string | number) => {
         return deleteMovie({
@@ -81,8 +85,12 @@ const Movies = () => {
         {
             title: 'Director',
             dataIndex: 'director',
-            render: (value => value.name),
-            sorter: (a, b) => a.director.name.localeCompare(b.director.name)
+            render: (value => value ? value.name : ''),
+            sorter: (a, b) => {
+                if (a && b && a.director && b.director) return a.director.name.localeCompare(b.director.name)
+
+                return 1;
+            }
         },
         {
             title: 'Actions',
