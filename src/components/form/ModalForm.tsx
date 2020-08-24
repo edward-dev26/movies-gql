@@ -39,7 +39,8 @@ const ModalForm: React.FC<PropsType> = ({entity, id, data, fields, initialValues
         const method = formMode === 'Add' ? addMethod : editMethod;
 
         method({
-            variables: getVariables(values, formMode)
+            variables: getVariables(values, formMode),
+
         })
             .then(() => {
                 setSubmitting(false);

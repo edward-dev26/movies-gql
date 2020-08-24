@@ -2,10 +2,11 @@ import React from 'react';
 import ModalForm from '../form/ModalForm';
 import {useParams} from 'react-router-dom';
 import {TField} from '../common/Fields/helpers';
-import {gql, useMutation, useQuery} from '@apollo/client';
+import {useMutation, useQuery} from '@apollo/client';
 import {ADD_DIRECTOR, UPDATE_DIRECTOR} from './mutations';
 import {GET_DIRECTOR} from './queries';
 import {IDirector} from '../../types/models';
+import {updateApoloCashAfterAdd} from '../../utils/utils';
 
 type TParams = {
     id: string
@@ -22,25 +23,7 @@ const DirectorsForm = () => {
     });
 
     const [addDirector] = useMutation(ADD_DIRECTOR, {
-        update: (cache, {data: {addDirector}}) => {
-            cache.modify({
-                fields: {
-                    movies: (directors = []) => {
-                        const newDirectorRef = cache.writeFragment({
-                            data: addDirector,
-                            fragment: gql`
-                                fragment NewDirector on Directors {
-                                    id
-                                    name
-                                }
-                            `
-                        });
-
-                        return [...directors, newDirectorRef];
-                    }
-                }
-            })
-        }
+        update: updateApoloCashAfterAdd('addDirector', 'directors')
     });
 
     const [editDirector] = useMutation(UPDATE_DIRECTOR);

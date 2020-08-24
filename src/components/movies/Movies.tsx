@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Table} from 'antd';
-import {StoreObject, useMutation, useQuery} from '@apollo/client';
+import {useMutation, useQuery} from '@apollo/client';
 import {GET_MOVIES} from './queries';
 import {IMovie} from '../../types/models';
 import Preloader from '../common/Preloader/Preloader';
@@ -10,6 +10,7 @@ import {EyeOutlined} from '@ant-design/icons';
 import DropdownMenu, {TMenuItems} from '../common/DropdownMenu/DropdownMenu';
 import FixedButton from '../common/FixedButton/FixedButton';
 import {EyeInvisibleOutlined} from '@ant-design/icons/lib';
+import {updateApoloCashAfterDelete} from '../../utils/utils';
 
 type TDirector = {
     id: string | number
@@ -35,15 +36,7 @@ const Movies = () => {
     const handleDelete = (id: string | number) => {
         return deleteMovie({
             variables: {id},
-            update: cache => {
-                cache.modify({
-                    fields: {
-                        movies: (movies: Array<StoreObject> = [], {readField}) => {
-                            return movies.filter(movie => id !== readField('id', movie))
-                        }
-                    }
-                })
-            }
+            update: updateApoloCashAfterDelete(id, 'movies')
         });
     };
 

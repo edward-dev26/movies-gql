@@ -1,11 +1,12 @@
 import React from 'react';
 import {TField} from '../common/Fields/helpers';
 import ModalForm from '../form/ModalForm';
-import {gql, useMutation, useQuery} from '@apollo/client';
+import {useMutation, useQuery} from '@apollo/client';
 import {GET_DIRECTORS, GET_MOVIE} from './queries';
 import {useParams} from 'react-router-dom';
 import {IMovie} from '../../types/models';
 import {ADD_MOVIE, UPDATE_MOVIE} from './mutations';
+import {updateApoloCashAfterAdd} from '../../utils/utils';
 
 type TParams = {
     id: string
@@ -33,25 +34,7 @@ const MoviesForm = () => {
     const {data: directorsData} = useQuery<TDirectorsResponse>(GET_DIRECTORS);
 
     const [addMovie] = useMutation(ADD_MOVIE, {
-        update: (cache, {data: {addMovie}}) => {
-            cache.modify({
-                fields: {
-                    movies: (movies = []) => {
-                        const newMovieRef = cache.writeFragment({
-                            data: addMovie,
-                            fragment: gql`
-                                fragment NewMovie on Movies {
-                                    id
-                                    name
-                                }
-                            `
-                        })
-
-                        return [...movies, newMovieRef];
-                    }
-                }
-            })
-        }
+        update: updateApoloCashAfterAdd('addMovie', 'movies')
     });
 
     const [editMovie] = useMutation(UPDATE_MOVIE);
@@ -75,7 +58,6 @@ const MoviesForm = () => {
         {name: 'directorId', placeholder: 'Movie director', label: 'Director', type: 'select', options},
         {name: 'watched', label: 'Did you watch this movie?', type: 'checkbox'}
     ];
-
 
     return (
         <ModalForm
