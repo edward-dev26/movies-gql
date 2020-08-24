@@ -7,6 +7,7 @@ import {useParams} from 'react-router-dom';
 import {IMovie} from '../../types/models';
 import {ADD_MOVIE, UPDATE_MOVIE} from './mutations';
 import {updateApoloCashAfterAdd} from '../../utils/utils';
+import {maxNumber, required} from '../../utils/validators';
 
 type TParams = {
     id: string
@@ -52,10 +53,10 @@ const MoviesForm = () => {
     const options = directorsData?.directors.map(({id, name}) => ({value: id, title: name}));
 
     const fields: Array<TField<TValues>> = [
-        {name: 'name', placeholder: 'Movie name', label: 'Name', type: 'text'},
-        {name: 'genre', placeholder: 'Movie genre', label: 'Genre', type: 'text'},
-        {name: 'rate', placeholder: 'Movie rate', label: 'Rate', type: 'number'},
-        {name: 'directorId', placeholder: 'Movie director', label: 'Director', type: 'select', options},
+        {name: 'name', placeholder: 'Movie name', label: 'Name', type: 'text', validators: [required]},
+        {name: 'genre', placeholder: 'Movie genre', label: 'Genre', type: 'text', validators: [required]},
+        {name: 'rate', placeholder: 'Movie rate', label: 'Rate', type: 'number', validators: [required, maxNumber(10)]},
+        {name: 'directorId', placeholder: 'Movie director', label: 'Director', type: 'select', options, validators: [required]},
         {name: 'watched', label: 'Did you watch this movie?', type: 'checkbox'}
     ];
 

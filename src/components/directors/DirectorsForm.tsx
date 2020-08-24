@@ -7,6 +7,7 @@ import {ADD_DIRECTOR, UPDATE_DIRECTOR} from './mutations';
 import {GET_DIRECTOR} from './queries';
 import {IDirector} from '../../types/models';
 import {updateApoloCashAfterAdd} from '../../utils/utils';
+import {required} from '../../utils/validators';
 
 type TParams = {
     id: string
@@ -36,8 +37,8 @@ const DirectorsForm = () => {
     type TValues = typeof initialValues;
 
     const fields: Array<TField<TValues>> = [
-        {name: 'name', placeholder: 'Director name', label: 'Name', type: 'text'},
-        {name: 'age', placeholder: 'Director age', label: 'Age', type: 'number'}
+        {name: 'name', placeholder: 'Director name', label: 'Name', type: 'text', validators: [required]},
+        {name: 'age', placeholder: 'Director age', label: 'Age', type: 'number', validators: [required]}
     ];
 
     return (
