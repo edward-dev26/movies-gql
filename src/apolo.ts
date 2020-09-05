@@ -1,6 +1,6 @@
 import {ApolloClient, InMemoryCache} from '@apollo/client';
 
 export const apolloClient = new ApolloClient({
-    uri: 'http://localhost:3005/graphql',
+    uri: 'https://movies-gql.herokuapp.com/graphql',
     cache: new InMemoryCache(),
 });
